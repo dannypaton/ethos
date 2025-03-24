@@ -17,7 +17,7 @@ interface HeroProps {
    * URL of the background video
    */
   videoSrc?: string;
-  
+
   /**
    * Alternative image to show before video loads
    */
@@ -27,72 +27,72 @@ interface HeroProps {
 /**
  * Hero section component with animated content and video background
  */
-const Hero: React.FC<HeroProps> = ({ 
+const Hero: React.FC<HeroProps> = ({
   videoSrc = "/video/home_hero.webm",
-  fallbackImage = "/images/hero-fallback.jpg"
+  fallbackImage = "/images/hero-fallback.jpg",
 }) => {
   // State for video modal
   const [videoModalOpen, setVideoModalOpen] = useState(false);
-  
+
   // Refs for GSAP animations
   const sectionRef = useRef<HTMLDivElement>(null);
   const triangleVideoRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const videoButtonRef = useRef<HTMLDivElement>(null);
-  
+
   // Initialize GSAP animations on component mount
   useEffect(() => {
     if (!sectionRef.current) return;
-    
+
     // Center the triangular video element
-    gsap.set(triangleVideoRef.current, { 
-      opacity: 0, 
+    gsap.set(triangleVideoRef.current, {
+      opacity: 0,
       scale: 0.95,
       xPercent: -50,
       yPercent: -50,
-      transformOrigin: "center center"
+      transformOrigin: "center center",
     });
-    
+
     // Animation timeline
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    
+
     // Animate the triangle video in
     tl.to(triangleVideoRef.current, {
       opacity: 1,
       scale: 1,
       duration: 0.8,
-      delay: 0.4
+      delay: 0.4,
     });
-    
+
     // Animate the logo and button
     gsap.fromTo(
       logoRef.current,
       { opacity: 0, y: 20 },
-      { 
-        opacity: 1, 
-        y: 0, 
-        duration: 0.8, 
-        delay: 0.6 
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.6,
       }
     );
-    
+
     gsap.fromTo(
       videoButtonRef.current,
       { opacity: 0, scale: 0.9 },
-      { 
-        opacity: 1, 
-        scale: 1, 
-        duration: 0.8, 
-        delay: 0.8 
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        delay: 0.8,
       }
     );
-    
+
     // Clean up animations on unmount
     return () => {
       tl.kill();
     };
   }, []);
-  
+
   return (
     <section
       ref={sectionRef}
@@ -144,12 +144,13 @@ const Hero: React.FC<HeroProps> = ({
           </div>
 
           {/* Hidden h1 for SEO while maintaining design */}
-          <h1 className="sr-only">
-            Ethos Metrotown - Luxury Residences
-          </h1>
+          <h1 className="sr-only">Ethos Metrotown - Luxury Residences</h1>
 
           {/* Video button */}
-          <div ref={videoButtonRef} className="mt-40 flex flex-col items-center">
+          <div
+            ref={videoButtonRef}
+            className="mt-40 flex flex-col items-center"
+          >
             <Button
               onClick={() => setVideoModalOpen(true)}
               variant="icon"

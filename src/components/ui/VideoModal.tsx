@@ -1,20 +1,20 @@
-import React, { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-import Button from './Button';
-import useAnimations from '@/hooks/useAnimations';
+import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import Button from "./Button";
+import useAnimations from "@/hooks/useAnimations";
 
 interface VideoModalProps {
   /**
    * URL of the video to play
    */
   src: string;
-  
+
   /**
    * Whether the modal is open
    */
   isOpen: boolean;
-  
+
   /**
    * Function to call when closing the modal
    */
@@ -28,43 +28,45 @@ const VideoModal: React.FC<VideoModalProps> = ({ src, isOpen, onClose }) => {
   const { modalOverlay, modalContent } = useAnimations();
   const videoRef = useRef<HTMLVideoElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  
+
   // Handle keyboard navigation and focus trapping
   useEffect(() => {
     // Auto-play video when modal opens
     if (isOpen && videoRef.current) {
-      videoRef.current.play().catch(error => console.log('Video autoplay error:', error));
+      videoRef.current
+        .play()
+        .catch((error) => console.log("Video autoplay error:", error));
     }
-    
+
     // Focus trap
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
-      
+
       // Close on escape
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose();
       }
     };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    
+
+    window.addEventListener("keydown", handleKeyDown);
+
     // Save previous active element to restore focus later
     const previousActiveElement = document.activeElement as HTMLElement;
-    
+
     // Focus the modal container when it opens
     if (isOpen && modalRef.current) {
       modalRef.current.focus();
     }
-    
+
     // When modal closes, return focus to the element that had it before
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
       if (!isOpen && previousActiveElement) {
         previousActiveElement.focus();
       }
     };
   }, [isOpen, onClose]);
-  
+
   // Stop video when modal closes
   useEffect(() => {
     if (!isOpen && videoRef.current) {
@@ -72,14 +74,14 @@ const VideoModal: React.FC<VideoModalProps> = ({ src, isOpen, onClose }) => {
       videoRef.current.currentTime = 0;
     }
   }, [isOpen]);
-  
+
   // Handle click outside to close
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -96,7 +98,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ src, isOpen, onClose }) => {
           role="dialog"
           aria-label="Video player"
         >
-          <motion.div 
+          <motion.div
             className="relative w-full max-w-4xl aspect-video"
             variants={modalContent}
           >
@@ -113,9 +115,9 @@ const VideoModal: React.FC<VideoModalProps> = ({ src, isOpen, onClose }) => {
                 height={24}
               />
             </Button>
-            <video 
+            <video
               ref={videoRef}
-              controls 
+              controls
               className="w-full h-full"
               aria-label="Video content"
             >
@@ -129,4 +131,4 @@ const VideoModal: React.FC<VideoModalProps> = ({ src, isOpen, onClose }) => {
   );
 };
 
-export default VideoModal; 
+export default VideoModal;

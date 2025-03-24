@@ -9,7 +9,7 @@ import { Variants, useReducedMotion } from 'framer-motion';
 export const useAnimations = () => {
   // Check if user prefers reduced motion
   const prefersReducedMotion = useReducedMotion();
-  
+
   // Default transition for use across animations
   const getDefaultTransition = (duration = 0.7, delay = 0) => {
     // Return minimal or no animation when reduced motion is preferred
@@ -20,7 +20,7 @@ export const useAnimations = () => {
         ease: 'linear'
       };
     }
-    
+
     // Normal animation transition
     return {
       duration,
@@ -28,18 +28,18 @@ export const useAnimations = () => {
       ease: [0.25, 0.1, 0.25, 1] // Cubic bezier easing
     };
   };
-  
+
   /**
    * Fade in from bottom animation
    */
   const fadeInUp: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: prefersReducedMotion ? 0 : 30 
+    hidden: {
+      opacity: 0,
+      y: prefersReducedMotion ? 0 : 30
     },
-    visible: (custom = 0) => ({ 
-      opacity: 1, 
-      y: 0, 
+    visible: (custom = 0) => ({
+      opacity: 1,
+      y: 0,
       transition: getDefaultTransition(0.7, custom * 0.2)
     })
   };
@@ -48,13 +48,13 @@ export const useAnimations = () => {
    * Fade in from top animation
    */
   const fadeInDown: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: prefersReducedMotion ? 0 : -30 
+    hidden: {
+      opacity: 0,
+      y: prefersReducedMotion ? 0 : -30
     },
-    visible: (custom = 0) => ({ 
-      opacity: 1, 
-      y: 0, 
+    visible: (custom = 0) => ({
+      opacity: 1,
+      y: 0,
       transition: getDefaultTransition(0.7, custom * 0.2)
     })
   };
@@ -63,13 +63,13 @@ export const useAnimations = () => {
    * Fade in with scale animation
    */
   const fadeInScale: Variants = {
-    hidden: { 
-      opacity: 0, 
-      scale: prefersReducedMotion ? 1 : 0.9 
+    hidden: {
+      opacity: 0,
+      scale: prefersReducedMotion ? 1 : 0.9
     },
-    visible: (custom = 0) => ({ 
-      opacity: 1, 
-      scale: 1, 
+    visible: (custom = 0) => ({
+      opacity: 1,
+      scale: 1,
       transition: getDefaultTransition(0.5, custom * 0.2)
     })
   };
@@ -79,12 +79,12 @@ export const useAnimations = () => {
    */
   const staggerContainer: Variants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         staggerChildren: prefersReducedMotion ? 0.1 : 0.2,
         delayChildren: 0.1,
-        when: 'beforeChildren' 
+        when: 'beforeChildren'
       }
     }
   };
@@ -93,12 +93,12 @@ export const useAnimations = () => {
    * Animation for revealing content on scroll
    */
   const scrollReveal: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: prefersReducedMotion ? 0 : 75 
+    hidden: {
+      opacity: 0,
+      y: prefersReducedMotion ? 0 : 75
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: getDefaultTransition(0.8)
     }
@@ -108,17 +108,17 @@ export const useAnimations = () => {
    * Animation for menu items
    */
   const menuItem: Variants = {
-    hidden: { 
-      opacity: 0, 
-      x: prefersReducedMotion ? 0 : -20 
+    hidden: {
+      opacity: 0,
+      x: prefersReducedMotion ? 0 : -20
     },
-    visible: (custom = 0) => ({ 
-      opacity: 1, 
-      x: 0, 
+    visible: (custom = 0) => ({
+      opacity: 1,
+      x: 0,
       transition: getDefaultTransition(0.4, custom * 0.1)
     }),
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       x: prefersReducedMotion ? 0 : -20,
       transition: getDefaultTransition(0.3)
     }
@@ -129,11 +129,11 @@ export const useAnimations = () => {
    */
   const modalOverlay: Variants = {
     hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       transition: getDefaultTransition(0.3)
     },
-    exit: { 
+    exit: {
       opacity: 0,
       transition: getDefaultTransition(0.2)
     }
@@ -143,16 +143,16 @@ export const useAnimations = () => {
    * Animation for modal content
    */
   const modalContent: Variants = {
-    hidden: { 
-      opacity: 0, 
-      scale: prefersReducedMotion ? 1 : 0.95 
+    hidden: {
+      opacity: 0,
+      scale: prefersReducedMotion ? 1 : 0.95
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       scale: 1,
       transition: getDefaultTransition(0.4)
     },
-    exit: { 
+    exit: {
       opacity: 0,
       scale: prefersReducedMotion ? 1 : 0.95,
       transition: getDefaultTransition(0.3)

@@ -1,43 +1,43 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 interface VideoBackgroundProps {
   /**
    * URL of the video to display as background
    */
   src: string;
-  
+
   /**
    * Additional classes to apply to the container
    */
   className?: string;
-  
+
   /**
    * Additional classes to apply to the overlay
    */
   overlayClassName?: string;
-  
+
   /**
    * Opacity of the overlay (0-1)
    */
   overlayOpacity?: number;
-  
+
   /**
    * Blur amount for the video ('none', 'sm', 'md', 'lg', 'xl')
    */
-  blurAmount?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  
+  blurAmount?: "none" | "sm" | "md" | "lg" | "xl";
+
   /**
    * Alternative image to show before video loads or on error
    */
   fallbackImage?: string;
-  
+
   /**
    * Whether to start the video playback automatically
    * @default true
    */
   autoPlay?: boolean;
-  
+
   /**
    * Whether to use low-power mode for mobile devices
    * This will pause the video when not in viewport
@@ -49,12 +49,12 @@ interface VideoBackgroundProps {
 /**
  * A reusable video background component with performance optimizations
  */
-const VideoBackground: React.FC<VideoBackgroundProps> = ({ 
-  src, 
-  className = '',
-  overlayClassName = '',
+const VideoBackground: React.FC<VideoBackgroundProps> = ({
+  src,
+  className = "",
+  overlayClassName = "",
   overlayOpacity = 0.5,
-  blurAmount = 'none',
+  blurAmount = "none",
   fallbackImage,
   autoPlay = true,
   useLowPowerMode = true,
@@ -63,59 +63,59 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isIntersecting, setIsIntersecting] = useState(false);
-  
+
   // Handle video loading
   useEffect(() => {
     const videoElement = videoRef.current;
-    
+
     if (!videoElement) return;
-    
+
     const handleLoadedData = () => {
       setIsVideoLoaded(true);
     };
-    
+
     const handleError = () => {
-      console.error('Video failed to load:', src);
+      console.error("Video failed to load:", src);
       setIsVideoLoaded(false);
     };
-    
-    videoElement.addEventListener('loadeddata', handleLoadedData);
-    videoElement.addEventListener('error', handleError);
-    
+
+    videoElement.addEventListener("loadeddata", handleLoadedData);
+    videoElement.addEventListener("error", handleError);
+
     return () => {
-      videoElement.removeEventListener('loadeddata', handleLoadedData);
-      videoElement.removeEventListener('error', handleError);
+      videoElement.removeEventListener("loadeddata", handleLoadedData);
+      videoElement.removeEventListener("error", handleError);
     };
   }, [src]);
-  
+
   // Handle power-saving mode for mobile devices
   useEffect(() => {
     if (!useLowPowerMode || !videoRef.current) return;
-    
+
     // Create an intersection observer to pause/play video when in/out of view
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsIntersecting(entry.isIntersecting);
-        
+
         if (entry.isIntersecting && videoRef.current && autoPlay) {
           // Only play if autoPlay is enabled
-          videoRef.current.play().catch(err => {
-            console.warn('Video autoplay failed:', err);
+          videoRef.current.play().catch((err) => {
+            console.warn("Video autoplay failed:", err);
           });
         } else if (!entry.isIntersecting && videoRef.current) {
           videoRef.current.pause();
         }
       },
       {
-        rootMargin: '0px',
-        threshold: 0.1
+        rootMargin: "0px",
+        threshold: 0.1,
       }
     );
-    
+
     if (containerRef.current) {
       observer.observe(containerRef.current);
     }
-    
+
     return () => {
       // Copy containerRef.current to a variable to avoid the stale ref warning
       const container = containerRef.current;
@@ -124,24 +124,24 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
       }
     };
   }, [useLowPowerMode, autoPlay]);
-  
+
   // Create blur class based on prop
-  const blurClass = blurAmount !== 'none' ? `blur-${blurAmount}` : '';
-  
+  const blurClass = blurAmount !== "none" ? `blur-${blurAmount}` : "";
+
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={`absolute inset-0 z-0 overflow-hidden ${className}`}
       aria-hidden="true"
     >
       {/* Fallback image if provided */}
       {fallbackImage && !isVideoLoaded && (
-        <div 
+        <div
           className={`absolute inset-0 bg-cover bg-center ${blurClass}`}
           style={{ backgroundImage: `url(${fallbackImage})` }}
         />
       )}
-      
+
       {/* Video element with loading optimization */}
       <video
         ref={videoRef}
@@ -155,7 +155,7 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
       >
         <source src={src} type="video/webm" />
       </video>
-      
+
       {/* Overlay with animation */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -167,4 +167,4 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
   );
 };
 
-export default VideoBackground; 
+export default VideoBackground;

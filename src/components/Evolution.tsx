@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import styles from './Evolution.module.css';
+import styles from "./Evolution.module.css";
 
 // Ensure ScrollTrigger is registered
 if (typeof window !== "undefined") {
@@ -153,7 +153,7 @@ const Evolution = () => {
   // Modal open/close functions
   const openModal = () => {
     setIsModalOpen(true);
-    
+
     if (modalRef.current) {
       gsap.fromTo(
         modalRef.current,
@@ -161,21 +161,23 @@ const Evolution = () => {
         { opacity: 1, duration: 0.3, ease: "power2.out" }
       );
     }
-    
+
     // Prevent background scrolling but don't affect ScrollTrigger
     document.body.style.overflow = "hidden";
-    
+
     // Don't disable ScrollTrigger updates when modal is open
     ScrollTrigger.update();
-    
+
     // Dispatch custom event for other components to respond
-    document.dispatchEvent(new CustomEvent('modalStateChange', { detail: { isOpen: true } }));
+    document.dispatchEvent(
+      new CustomEvent("modalStateChange", { detail: { isOpen: true } })
+    );
   };
 
   const closeModal = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation(); // Prevent event propagation
-    
+
     if (modalRef.current) {
       gsap.to(modalRef.current, {
         opacity: 0,
@@ -185,16 +187,18 @@ const Evolution = () => {
           setIsModalOpen(false);
           // Restore scrolling when modal is fully closed
           document.body.style.overflow = "";
-          
+
           // Update all ScrollTriggers to ensure they resume correctly
           ScrollTrigger.update();
-          
+
           // Refresh if needed to make sure face_frames animation works
           setTimeout(() => {
             ScrollTrigger.refresh();
-            
+
             // Dispatch custom event for other components to respond
-            document.dispatchEvent(new CustomEvent('modalStateChange', { detail: { isOpen: false } }));
+            document.dispatchEvent(
+              new CustomEvent("modalStateChange", { detail: { isOpen: false } })
+            );
           }, 100);
         },
       });
@@ -208,10 +212,7 @@ const Evolution = () => {
     >
       <div className="container-custom mx-0 px-0 max-w-none flex flex-col lg:flex-row">
         {/* Left side - Image */}
-        <div
-          className="w-full lg:w-8/12"
-          ref={imageContainerRef}
-        >
+        <div className="w-full lg:w-8/12" ref={imageContainerRef}>
           <div
             ref={imageRef}
             className="w-full h-full overflow-hidden opacity-100"
@@ -221,7 +222,7 @@ const Evolution = () => {
               alt="Metrotown City View"
               fill
               priority
-              className="transform transition-transform duration-700 !relative px-[10%] lg:px-0 object-cover object-position-center" 
+              className="transform transition-transform duration-700 !relative px-[10%] lg:px-0 object-cover object-position-center"
             />
           </div>
         </div>
@@ -249,7 +250,9 @@ const Evolution = () => {
               ref={paragraphRef}
               className="font-owners-light text-white mb-16 text-base md:text-[18px] leading-relaxed"
             >
-              Two decades of Metrotown placemaking. A trusted partner in a city&apos;s dramatic growth. Our unwavering ethos for meaningful change.
+              Two decades of Metrotown placemaking. A trusted partner in a
+              city&apos;s dramatic growth. Our unwavering ethos for meaningful
+              change.
             </p>
 
             <div className={styles.anthemBtnContainer}>
@@ -284,7 +287,7 @@ const Evolution = () => {
           // Add a specific data attribute to help identify this modal
           data-modal="evolution-modal"
         >
-          <div 
+          <div
             className="relative w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()} // Prevent clicks inside content from closing
           >

@@ -109,8 +109,8 @@ export const addHoverAnimation = (
     ease = 'power2.out',
   } = options || {};
 
-  const elementsArray = Array.isArray(elements) || elements instanceof NodeList 
-    ? Array.from(elements) 
+  const elementsArray = Array.isArray(elements) || elements instanceof NodeList
+    ? Array.from(elements)
     : [elements];
 
   elementsArray.forEach(element => {
@@ -121,7 +121,7 @@ export const addHoverAnimation = (
         ease,
       });
     });
-    
+
     element.addEventListener('mouseleave', () => {
       gsap.to(element, {
         scale: 1,
@@ -139,24 +139,24 @@ export const createSectionTransitionAnimation = (
   transitionLine: Element,
   sections: Element | Element[] | NodeListOf<Element>
 ) => {
-  const sectionsArray = Array.isArray(sections) || sections instanceof NodeList 
-    ? Array.from(sections) 
+  const sectionsArray = Array.isArray(sections) || sections instanceof NodeList
+    ? Array.from(sections)
     : [sections];
 
   sectionsArray.forEach((section, index) => {
     if (index === 0) return; // Skip first section
-    
+
     ScrollTrigger.create({
       trigger: section,
       start: 'top 70%',
       end: 'bottom bottom',
       onEnter: () => {
-        gsap.fromTo(transitionLine, 
+        gsap.fromTo(transitionLine,
           { height: 0, top: 0 },
-          { 
-            height: '100%', 
+          {
+            height: '100%',
             top: 0,
-            duration: 1, 
+            duration: 1,
             ease: 'power3.inOut',
             onComplete: () => {
               gsap.to(transitionLine, {
@@ -183,26 +183,26 @@ export const initHeroAnimations = (
   subtitleRef: React.RefObject<HTMLElement>,
   videoButtonRef: React.RefObject<HTMLElement>
 ) => {
-  gsap.set([titleRef.current, subtitleRef.current, videoButtonRef.current], { 
-    opacity: 0 
+  gsap.set([titleRef.current, subtitleRef.current, videoButtonRef.current], {
+    opacity: 0
   });
-  
+
   const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 1.2 } });
-  
-  tl.to(titleRef.current, { 
-    opacity: 1, 
-    y: 0, 
+
+  tl.to(titleRef.current, {
+    opacity: 1,
+    y: 0,
     delay: 0.5
   })
-  .to(subtitleRef.current, { 
-    opacity: 1, 
-    y: 0 
-  }, '-=0.8')
-  .to(videoButtonRef.current, { 
-    opacity: 1, 
-    scale: 1 
-  }, '-=0.6');
-  
+    .to(subtitleRef.current, {
+      opacity: 1,
+      y: 0
+    }, '-=0.8')
+    .to(videoButtonRef.current, {
+      opacity: 1,
+      scale: 1
+    }, '-=0.6');
+
   return tl;
 };
 
@@ -233,24 +233,24 @@ export const initScrollAnimations = (
  * Text reveal animation helper
  */
 export const textRevealAnimation = (
-  element: HTMLElement, 
-  options: { 
-    delay?: number, 
+  element: HTMLElement,
+  options: {
+    delay?: number,
     direction?: 'up' | 'down' | 'left' | 'right',
     duration?: number
   } = {}
 ) => {
   const { delay = 0, direction = 'up', duration = 1 } = options;
-  
+
   const directionMap = {
     up: { y: 50 },
     down: { y: -50 },
     left: { x: 50 },
     right: { x: -50 }
   };
-  
+
   const directionProps = directionMap[direction];
-  
+
   gsap.from(element, {
     opacity: 0,
     ...directionProps,
@@ -264,14 +264,14 @@ export const textRevealAnimation = (
  * Image reveal animation helper
  */
 export const imageRevealAnimation = (
-  element: HTMLElement, 
-  options: { 
+  element: HTMLElement,
+  options: {
     delay?: number,
     duration?: number
   } = {}
 ) => {
   const { delay = 0, duration = 1.2 } = options;
-  
+
   // Create a mask overlay
   const parent = element.parentElement;
   const mask = document.createElement('div');
@@ -282,12 +282,12 @@ export const imageRevealAnimation = (
   mask.style.bottom = '0';
   mask.style.backgroundColor = '#031220';
   mask.style.zIndex = '1';
-  
+
   if (parent) {
     parent.style.position = 'relative';
     parent.appendChild(mask);
   }
-  
+
   // Reveal animation
   gsap.to(mask, {
     scaleX: 0,
@@ -301,7 +301,7 @@ export const imageRevealAnimation = (
       }
     }
   });
-  
+
   // Optional scale animation on the image itself
   gsap.from(element, {
     scale: 1.1,
