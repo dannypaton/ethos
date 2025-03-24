@@ -226,7 +226,7 @@ const ManyOne = () => {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center z-30 pointer-events-none"
           >
             <div className="flex flex-col items-center justify-center absolute inset-0">
-              <h1 className="text-[70px] md:text-[110px] lg:text-[280px] text-white text-center z-50 leading-[210px] top-[-50px] relative">
+              <h1 className="text-[110px] md:text-[110px] lg:text-[280px] text-white text-center z-50 leading-[80px] md:leading-[110px] lg:leading-[220px] top-[10px] md:top-[-50px] lg:top-[-50px] relative">
                 {textLayout.map((row, rowIndex) => (
                   <div 
                     key={`row-${rowIndex}`} 

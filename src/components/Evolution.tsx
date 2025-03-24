@@ -229,7 +229,7 @@ const Evolution = () => {
         {/* Right side - Content */}
         <div
           ref={textRef}
-          className="w-full lg:w-4/12 flex flex-col md:pl-16 lg:pt-16"
+          className="w-full lg:w-4/12 flex flex-col md:pl-16 lg:pt-16 p-[6%]"
         >
           <div>
             <h2
