@@ -6,7 +6,6 @@ import Button from "./ui/Button";
 import VideoModal from "./ui/VideoModal";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { initHeroAnimations } from "@/utils/animations";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {

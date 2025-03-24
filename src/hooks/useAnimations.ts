@@ -1,5 +1,4 @@
 import { Variants, useReducedMotion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 
 /**
  * Custom hook that provides reusable animation variants for Framer Motion

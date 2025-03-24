@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import styles from './Evolution.module.css';
@@ -19,10 +18,8 @@ const Evolution = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const interactionBoxRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -239,7 +236,7 @@ const Evolution = () => {
               ref={titleRef}
               className="text-[32px] md:text-[50px] font-cirka mb-8 text-white leading-tight tracking-wide"
             >
-              ANTHEM'S
+              ANTHEM&apos;S
               <br />
               METROTOWN
               <br />
@@ -252,7 +249,7 @@ const Evolution = () => {
               ref={paragraphRef}
               className="font-owners-light text-white mb-16 text-base md:text-[18px] leading-relaxed"
             >
-              Two decades of Metrotown placemaking. A trusted partner in a city's dramatic growth. Our unwavering ethos for meaningful change.
+              Two decades of Metrotown placemaking. A trusted partner in a city&apos;s dramatic growth. Our unwavering ethos for meaningful change.
             </p>
 
             <div className={styles.anthemBtnContainer}>
@@ -316,11 +313,11 @@ const Evolution = () => {
 
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-b from-transparent to-black/90">
                 <h3 className="text-lg md:text-xl font-cirka mb-2">
-                  ANTHEM'S METROTOWN EVOLUTION
+                  ANTHEM&apos;S METROTOWN EVOLUTION
                 </h3>
                 <p className="text-sm font-owners-light text-white/70">
-                  An aerial view of Metrotown's urban landscape, showcasing
-                  Anthem's development impact over two decades.
+                  An aerial view of Metrotown&apos;s urban landscape, showcasing
+                  Anthem&apos;s development impact over two decades.
                 </p>
               </div>
             </div>

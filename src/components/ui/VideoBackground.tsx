@@ -117,8 +117,10 @@ const VideoBackground: React.FC<VideoBackgroundProps> = ({
     }
     
     return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
+      // Copy containerRef.current to a variable to avoid the stale ref warning
+      const container = containerRef.current;
+      if (container) {
+        observer.unobserve(container);
       }
     };
   }, [useLowPowerMode, autoPlay]);

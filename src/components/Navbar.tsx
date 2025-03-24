@@ -19,7 +19,7 @@ const Navbar = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Animation variants
-  const { staggerContainer, menuItem, fadeInUp, fadeInScale } = useAnimations();
+  const { staggerContainer, menuItem } = useAnimations();
 
   // Pre-load videos for smoother experience
   useEffect(() => {

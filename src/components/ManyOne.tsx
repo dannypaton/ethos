@@ -156,10 +156,13 @@ const ManyOne = () => {
                   ref={frameSequenceRef}
                   className="absolute inset-0 w-full h-full"
                 >
-                  <img
+                  <Image
                     src={getFrameSrc(currentFrame)}
                     alt="Face sequence animation"
-                    className="h-full w-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized={false}
+                    priority
                   />
 
                   {/* Visual effects layer group */}

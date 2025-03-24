@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export interface SocialLink {
-  platform: 'instagram' | 'facebook' | 'twitter' | 'linkedin';
+  platform: 'instagram' | 'twitter' | 'linkedin';
   url: string;
 }
 
