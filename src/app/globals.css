@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Font Face Declarations - Ensure proper fallbacks */
+@layer base {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 3, 18, 32;
+    --background-end-rgb: 3, 18, 32;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-cirka;
+  }
+  
+  p {
+    @apply font-owners text-ethos-gray;
+  }
+}
+
+/* Typography utility classes */
+@layer components {
+  .heading-large {
+    @apply font-cirka text-4xl md:text-6xl leading-tight tracking-tight;
+  }
+  
+  .heading-medium {
+    @apply font-cirka text-3xl md:text-4xl leading-tight tracking-tight;
+  }
+  
+  .heading-small {
+    @apply font-cirka text-xl md:text-2xl leading-tight;
+  }
+  
+  .text-large {
+    @apply font-owners text-lg md:text-xl;
+  }
+  
+  .text-regular {
+    @apply font-owners text-base;
+  }
+  
+  .text-small {
+    @apply font-owners-light text-sm;
+  }
+  
+  .text-caption {
+    @apply font-owners-light text-xs uppercase tracking-wider;
+  }
+  
+  .text-italic {
+    @apply font-owners-italic;
+  }
+  
+  .btn {
+    @apply inline-block py-2 px-6 border border-ethos-gray uppercase text-xs tracking-widest transition-all font-owners;
+  }
+  
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+}
