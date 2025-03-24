@@ -10,6 +10,16 @@ if (typeof window !== "undefined") {
 }
 
 const ManyOne = () => {
+  // Text layout as individual letters in the right order
+  const textLayout = [
+    ['O', 'U', 'T', '&nbsp;', 'O', 'F'],
+    ['M', 'A', 'N', 'Y', ','],
+    ['O', 'N', 'E']
+  ];
+  
+  // Calculate total number of letters for refs array
+  const totalLetters = textLayout.flat().length;
+  
   // Element references
   const sectionRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
@@ -20,6 +30,8 @@ const ManyOne = () => {
   const frameSequenceRef = useRef<HTMLDivElement>(null);
   const svgOverlayRef = useRef<HTMLDivElement>(null);
   const rippleEffectRef = useRef<HTMLDivElement>(null);
+  // Add refs for each letter
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>(Array(totalLetters).fill(null));
 
   // State for animation
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -27,9 +39,32 @@ const ManyOne = () => {
 
   useEffect(() => {
     // Initialize elements
-    const elementsToFade = [headingRef, textRef, lineRef, svgOverlayRef];
+    const elementsToFade = [headingRef, textRef, lineRef];
     elementsToFade.forEach(ref => {
       if (ref.current) gsap.set(ref.current, { opacity: 1 });
+    });
+
+    // Set initial state for letter animations
+    letterRefs.current.forEach((letter, index) => {
+      if (letter) {
+        // Different offset ranges based on which line the letter is on
+        let baseOffset = -500;
+        // Determine which row this letter belongs to
+        let rowIndex = 0;
+        if (index < 6) rowIndex = 0; // first row (OUT OF)
+        else if (index < 11) rowIndex = 1; // second row (MANY,)
+        else rowIndex = 2; // third row (ONE)
+        
+        baseOffset = -600 + (rowIndex * 100); // Higher offset for first row, less for each subsequent row
+        
+        // Create varied starting positions
+        const randomOffset = Math.floor(Math.random() * 100) - 50; // Random value between -50 and 50
+        gsap.set(letter, { 
+          y: baseOffset + randomOffset, // Varied starting position
+          opacity: 0,
+          rotation: Math.random() * 6 - 3, // Slight random rotation between -3 and 3 degrees
+        });
+      }
     });
 
     // ScrollTrigger refresh handler for modals
@@ -43,6 +78,24 @@ const ManyOne = () => {
 
     // Face frame animation ScrollTrigger
     if (sectionRef.current && frameSequenceRef.current) {
+      // Create a randomized order array for letter animations once on mount
+      const randomOrderIndices = [...Array(letterRefs.current.length).keys()];
+      // Shuffle the array using Fisher-Yates algorithm
+      for (let i = randomOrderIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [randomOrderIndices[i], randomOrderIndices[j]] = [randomOrderIndices[j], randomOrderIndices[i]];
+      }
+
+      // Find the container-custom div
+      const containerElement = sectionRef.current.querySelector('.container-custom');
+      
+      // Find the image container as a more focused trigger point
+      const imageContainer = frameSequenceRef.current?.closest('.relative');
+      
+      // Find the text overlay container with the letters
+      const textOverlay = svgOverlayRef.current;
+
+      // Create separate ScrollTrigger for face frames animation
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 90%",
@@ -72,6 +125,51 @@ const ManyOne = () => {
         id: "face-frames-animation",
         invalidateOnRefresh: true,
       });
+      
+      // Create separate ScrollTrigger specifically for letter animations
+      // This allows the letters to animate independently from the face frames
+      ScrollTrigger.create({
+        trigger: textOverlay || imageContainer || containerElement, // Target the text overlay specifically
+        start: "top bottom", // Start as soon as the text enters the viewport
+        end: "top 40%", // End when text reaches 40% from the top - much earlier
+        scrub: 0.5,
+        markers: false,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          
+          // Animate letters based on scroll progress
+          randomOrderIndices.forEach((randomIndex, orderPosition) => {
+            const letter = letterRefs.current[randomIndex];
+            if (letter) {
+              // Calculate the progress threshold at which this letter should appear
+              // Ensure all letters are visible by 90% of the scroll progress
+              const appearThreshold = (orderPosition / letterRefs.current.length) * 0.9;
+              
+              // If scroll progress passes this letter's threshold, show it
+              if (progress >= appearThreshold) {
+                gsap.to(letter, {
+                  y: 0,
+                  opacity: 1,
+                  rotation: 0,
+                  duration: 0.3, // Quick transition when threshold is passed
+                  ease: "power2.out"
+                });
+              } else {
+                // Keep letter hidden if scroll hasn't reached its threshold
+                gsap.to(letter, {
+                  y: -300 + (randomIndex % 3) * 100, // Varied starting positions
+                  opacity: 0,
+                  rotation: (randomIndex % 6) - 3, // Slight random rotation
+                  duration: 0.2,
+                  ease: "power2.in"
+                });
+              }
+            }
+          });
+        },
+        id: "letter-animations",
+        invalidateOnRefresh: true,
+      });
 
       // Reveal animations
       gsap.fromTo(
@@ -91,13 +189,6 @@ const ManyOne = () => {
         { scaleX: 0.5, opacity: 0.8 },
         { scaleX: 1, opacity: 1, duration: 0.8, ease: "power1.out" }
       );
-
-      gsap.to(svgOverlayRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.3,
-        ease: "power1.out",
-      });
     }
 
     // Event listeners
@@ -124,7 +215,7 @@ const ManyOne = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-24 md:py-32 lg:py-40 relative bg-ethos-dark overflow-visible"
+      className="py-24 md:py-32 lg:py-40 lg:mt-[150px] relative bg-ethos-dark overflow-visible"
     >
       <div className="container-custom">
         {/* Main content container */}
@@ -134,14 +225,38 @@ const ManyOne = () => {
             ref={svgOverlayRef}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center z-30 pointer-events-none"
           >
-            <Image
-              src="/images/outofmany-large.svg"
-              alt="OUT OF MANY, ONE"
-              width={900}
-              height={500}
-              className="z-50"
-              priority
-            />
+            <div className="flex flex-col items-center justify-center absolute inset-0">
+              <h1 className="text-[70px] md:text-[110px] lg:text-[280px] text-white text-center z-50 leading-[210px] top-[-50px] relative">
+                {textLayout.map((row, rowIndex) => (
+                  <div 
+                    key={`row-${rowIndex}`} 
+                    className={`flex justify-center ${rowIndex < textLayout.length - 1 ? 'mb-4 md:mb-8' : ''}`}
+                  >
+                    {row.map((letter, letterIndex) => {
+                      const globalIndex = rowIndex === 0 
+                        ? letterIndex 
+                        : rowIndex === 1 
+                          ? letterIndex + textLayout[0].length 
+                          : letterIndex + textLayout[0].length + textLayout[1].length;
+                      
+                      return (
+                        <span
+                          key={`letter-${rowIndex}-${letterIndex}`}
+                          ref={(el) => { letterRefs.current[globalIndex] = el; }}
+                          className={`inline-block transform-gpu ${
+                            letter === ',' || letter === '&nbsp;' ? 'mr-[0.1em] relative -translate-y-[0.3em]' : 
+                            letter === '&nbsp;' ? 'mx-[0.2em]' : 'mx-[0.02em] md:mx-[0.04em]'
+                          }`}
+                          style={{ opacity: 0, transform: 'translateY(-300px)' }}
+                        >
+                          {letter === '&nbsp;' ? '\u00A0' : letter}
+                        </span>
+                      );
+                    })}
+                  </div>
+                ))}
+              </h1>
+            </div>
           </div>
 
           {/* Image content */}
