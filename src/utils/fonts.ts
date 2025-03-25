@@ -36,12 +36,7 @@ export const ownersTextLight = localFont({
       path: '../../public/fonts/OwnersText-Light.ttf',
       weight: '300',
       style: 'normal',
-    },
-    {
-      path: '../../public/fonts/OwnersText-Light.eot',
-      weight: '300',
-      style: 'normal',
-    },
+    }
   ],
   variable: '--font-owners-light',
   display: 'swap'
@@ -63,7 +58,7 @@ export const ownersTextRegular = localFont({
       path: '../../public/fonts/OwnersText-Regular.ttf',
       weight: '400',
       style: 'normal',
-    },
+    }
   ],
   variable: '--font-owners-regular',
   display: 'swap'
@@ -75,12 +70,7 @@ export const ownersTextItalic = localFont({
       path: '../../public/fonts/OwnersText-RegularItalic.ttf',
       weight: '400',
       style: 'italic',
-    },
-    {
-      path: '../../public/fonts/OwnersText-RegularItalic.eot',
-      weight: '400',
-      style: 'italic',
-    },
+    }
   ],
   variable: '--font-owners-italic',
   display: 'swap'
