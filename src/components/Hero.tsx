@@ -164,7 +164,7 @@ const Hero: React.FC<HeroProps> = ({
           </div>
 
           {/* Primary heading for SEO and accessibility */}
-          <h1 className="text-4xl font-bold text-white mb-8">
+          <h1 className="text-4xl font-bold text-white mb-8 hidden">
             Ethos Metrotown - Luxury Residences
           </h1>
 

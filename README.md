@@ -6,7 +6,7 @@ A luxury residential property website built with Next.js, TypeScript, Tailwind C
 
 ### Component Structure
 - **UI Components**: Reusable components in `/components/ui`
-- **Section Components**: Content sections like Hero, Evolution
+- **Section Components**: Content sections like Hero, Evolution, ManyOne
 - **Layout Components**: Structure components
 - **Page Components**: Top-level page containers
 
@@ -16,30 +16,50 @@ A luxury residential property website built with Next.js, TypeScript, Tailwind C
 - **Animation**: GSAP with ScrollTrigger
 - **Media**: Optimized images (WebP/AVIF), compressed videos
 
-## Styling Approach
+## Core Features
 
-We use a tiered approach to styling:
+### Accessibility
+- **Semantic Structure**:
+  - Proper HTML5 elements and landmarks
+  - Logical heading hierarchy
+  - ARIA attributes and labels
+- **Interactive Elements**:
+  - Keyboard navigation
+  - Focus management
+  - Screen reader support
+- **Visual Considerations**:
+  - High contrast ratios
+  - Reduced motion support
+  - Clear visual hierarchy
 
+### Performance
+- **Code Optimization**:
+  - Component-level code splitting
+  - Memoized callbacks
+  - Efficient event handling
+- **Asset Optimization**:
+  - Next.js image optimization
+  - Responsive image loading
+  - Video compression
+- **Animation Performance**:
+  - GSAP ScrollTrigger cleanup
+  - Hardware acceleration
+  - Debounced handlers
+
+## Development Guidelines
+
+### Styling Approach
 1. **Tailwind CSS** for most UI styling
-2. **CSS Modules** for component-specific styles and keyframe animations
+2. **CSS Modules** for component-specific styles and animations
 3. **GSAP** for complex animations
+4. **CSS Custom Properties** for dynamic values
 
-### When to Use Each
-- **Use Tailwind** for most styling needs
-- **Create CSS Modules** for custom animations, complex selectors, and reusable component styles
-- **Use GSAP** for scroll-based animations, timelines, and interactive sequences
-- **Use inline styles** only for dynamic values from state/props
-
-## Animation Strategy
-
-GSAP drives our animation system:
-
-- **Component-based**: Each component manages its own animations
-- **Modular utilities**: `utils/animations.ts` provides reusable animation functions
-- **Performance optimized**: Hardware acceleration, will-change, debounced handlers
-- **Accessibility-conscious**: Respects reduced motion preferences, manages focus
-
-## Development
+### Animation Best Practices
+- Check `prefers-reduced-motion` before animations
+- Use `useCallback` for animation handlers
+- Proper GSAP and ScrollTrigger cleanup
+- CSS transitions for simple interactions
+- Modal focus trapping and management
 
 ### Getting Started
 ```bash
@@ -54,23 +74,19 @@ npm run build
 npm run start
 ```
 
-## Key Features
-
-- Responsive design with mobile-first approach
-- Advanced animations with GSAP ScrollTrigger
-- Performance optimized (code splitting, lazy loading)
-- Accessibility compliant (ARIA, keyboard nav, screen readers)
-
 ## Project Structure
 ```
 ├── public/               # Static assets
+│   ├── images/          # Optimized images
+│   └── video/           # Compressed videos
 ├── src/
-│   ├── app/              # Next.js App Router
-│   ├── components/       # React components
-│   │   ├── ui/           # Reusable UI components
-│   │   └── ...           # Section components
-│   ├── hooks/            # Custom React hooks
-│   └── utils/            # Utility functions
+│   ├── app/             # Next.js App Router
+│   ├── components/      # React components
+│   │   ├── ui/          # Reusable UI components
+│   │   └── ...          # Section components
+│   ├── hooks/           # Custom React hooks
+│   ├── styles/          # Global styles & CSS modules
+│   └── utils/           # Utility functions
 └── ...config files
 ```
 
