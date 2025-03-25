@@ -61,6 +61,17 @@ A luxury residential property website built with Next.js, TypeScript, Tailwind C
 - CSS transitions for simple interactions
 - Modal focus trapping and management
 
+### Motion Components
+- **Navigation**: Uses Framer Motion for menu transitions, including:
+  - Fullscreen menu overlay animations
+  - Staggered menu item reveals
+  - Video background transitions
+  - Triangle shape clip-path animations
+- **Video Components**: Implements motion for:
+  - Modal open/close transitions
+  - Background video effects
+  - Smooth video playback controls
+
 ### Getting Started
 ```bash
 npm install
