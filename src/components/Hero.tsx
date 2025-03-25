@@ -76,6 +76,7 @@ const Hero: React.FC<HeroProps> = ({
       }
     );
 
+    // Initial entrance animation for video button
     gsap.fromTo(
       videoButtonRef.current,
       { opacity: 0, scale: 0.9 },
@@ -87,9 +88,30 @@ const Hero: React.FC<HeroProps> = ({
       }
     );
 
+    // Add scroll-triggered animation for video button
+    gsap.fromTo(videoButtonRef.current,
+      {
+        opacity: 1,
+        y: 0
+      },
+      {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+          toggleActions: "play reverse play reverse"
+        },
+        opacity: 0,
+        y: -100,
+        ease: "power1.inOut"
+      }
+    );
+
     // Clean up animations on unmount
     return () => {
       tl.kill();
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 

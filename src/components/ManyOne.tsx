@@ -41,8 +41,8 @@ const ManyOne = () => {
           y: -300,
           rotation: Math.random() * 6 - 3,
         });
-      });
-    }
+        });
+      }
 
     // ScrollTrigger refresh handler for modals
     const handleModalStateChange = () => {
@@ -97,14 +97,14 @@ const ManyOne = () => {
         const paths = Array.from(svgRef.current.querySelectorAll('path'));
         const randomOrderPaths = [...paths].sort(() => Math.random() - 0.5);
         
-        ScrollTrigger.create({
+      ScrollTrigger.create({
           trigger: imageContainer || containerElement,
           start: "top bottom",
           end: "top 40%",
-          scrub: 0.5,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          
             randomOrderPaths.forEach((path, index) => {
               const appearThreshold = (index / paths.length) * 0.9;
               
@@ -124,12 +124,12 @@ const ManyOne = () => {
                   duration: 0.2,
                   ease: "power2.in"
                 });
-              }
-            });
-          },
+            }
+          });
+        },
           id: "svg-animations",
-          invalidateOnRefresh: true,
-        });
+        invalidateOnRefresh: true,
+      });
       }
 
       // Reveal animations
@@ -157,7 +157,7 @@ const ManyOne = () => {
 
     // Cleanup
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       document.removeEventListener('modalStateChange', handleModalStateChange);
     };
   }, []);
