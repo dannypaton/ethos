@@ -29,7 +29,7 @@ interface HeroProps {
  */
 const Hero: React.FC<HeroProps> = ({
   videoSrc = "/video/home_hero.webm",
-  fallbackImage = "/images/hero-fallback.jpg",
+  fallbackImage = "/images/home-1.webp",
 }) => {
   // State for video modal
   const [videoModalOpen, setVideoModalOpen] = useState(false);
