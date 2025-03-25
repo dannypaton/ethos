@@ -41,8 +41,8 @@ const ManyOne = () => {
           y: -300,
           rotation: Math.random() * 6 - 3,
         });
-        });
-      }
+      });
+    }
 
     // ScrollTrigger refresh handler for modals
     const handleModalStateChange = () => {
@@ -97,14 +97,14 @@ const ManyOne = () => {
         const paths = Array.from(svgRef.current.querySelectorAll('path'));
         const randomOrderPaths = [...paths].sort(() => Math.random() - 0.5);
         
-      ScrollTrigger.create({
+        ScrollTrigger.create({
           trigger: imageContainer || containerElement,
           start: "top bottom",
           end: "top 40%",
-        scrub: 0.5,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          
+          scrub: 0.5,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            
             randomOrderPaths.forEach((path, index) => {
               const appearThreshold = (index / paths.length) * 0.9;
               
@@ -124,32 +124,36 @@ const ManyOne = () => {
                   duration: 0.2,
                   ease: "power2.in"
                 });
-            }
-          });
-        },
+              }
+            });
+          },
           id: "svg-animations",
-        invalidateOnRefresh: true,
-      });
+          invalidateOnRefresh: true,
+        });
       }
 
-      // Reveal animations
-      gsap.fromTo(
-        headingRef.current,
-        { y: 20, opacity: 0.8 },
-        { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" }
-      );
+      // Reveal animations with reduced motion preference check
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      gsap.fromTo(
-        textRef.current,
-        { y: 20, opacity: 0.8 },
-        { y: 0, opacity: 1, duration: 0.8, delay: 0.2, ease: "power1.out" }
-      );
+      if (!prefersReducedMotion) {
+        gsap.fromTo(
+          headingRef.current,
+          { y: 20, opacity: 0.8 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" }
+        );
 
-      gsap.fromTo(
-        lineRef.current,
-        { scaleX: 0.5, opacity: 0.8 },
-        { scaleX: 1, opacity: 1, duration: 0.8, ease: "power1.out" }
-      );
+        gsap.fromTo(
+          textRef.current,
+          { y: 20, opacity: 0.8 },
+          { y: 0, opacity: 1, duration: 0.8, delay: 0.2, ease: "power1.out" }
+        );
+
+        gsap.fromTo(
+          lineRef.current,
+          { scaleX: 0.5, opacity: 0.8 },
+          { scaleX: 1, opacity: 1, duration: 0.8, ease: "power1.out" }
+        );
+      }
     }
 
     // Event listeners
@@ -157,7 +161,7 @@ const ManyOne = () => {
 
     // Cleanup
     return () => {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       document.removeEventListener('modalStateChange', handleModalStateChange);
     };
   }, []);
@@ -172,12 +176,16 @@ const ManyOne = () => {
     <section
       ref={sectionRef}
       className="py-24 md:py-32 lg:py-40 lg:mt-[150px] relative bg-ethos-dark overflow-visible"
+      aria-label="Many One Section"
     >
       <div className="container-custom">
         {/* Main content container */}
         <div className="relative mx-20px">
           {/* SVG Text Overlay */}
-          <div className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center z-30 pointer-events-none">
+          <div 
+            className="absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center z-30 pointer-events-none"
+            aria-hidden="true"
+          >
             <svg
               ref={svgRef}
               width="969"
@@ -186,6 +194,7 @@ const ManyOne = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               className="w-full h-auto max-w-[969px]"
+              role="presentation"
             >
               <path d="M742.442 555.552L739.562 555.84C738.986 549.504 737.162 543.936 734.09 539.136C731.018 534.336 726.026 531.936 719.114 531.936H635.594V521.28H739.562L740.138 527.904L742.442 555.552ZM717.386 694.08C724.874 694.08 730.73 691.584 734.954 686.592C739.37 681.408 742.442 675.456 744.17 668.736L747.338 669.6L739.562 698.112L737.834 704.736H636.458V694.08H717.386ZM601.898 701.568C607.466 701.568 612.266 700.128 616.298 697.248C620.522 694.176 622.634 688.896 622.634 681.408V544.608C622.634 537.12 620.522 531.936 616.298 529.056C612.266 525.984 607.466 524.448 601.898 524.448V521.28H626.09H639.626V704.736H626.09H601.898V701.568ZM701.834 600.768C709.322 600.768 714.506 599.232 717.386 596.16C720.458 592.896 721.994 589.248 721.994 585.216H725.162V603.36V608.256V626.4H721.994C721.994 622.368 720.458 618.816 717.386 615.744C714.506 612.48 709.322 610.848 701.834 610.848H635.594V600.768H701.834Z" fill="#DAD9D6"/>
               <path d="M425.382 681.408C425.382 688.896 427.398 694.176 431.43 697.248C435.462 700.128 440.262 701.568 445.83 701.568V704.736H421.926H417.03H392.838V701.568C398.406 701.568 403.206 700.128 407.238 697.248C411.462 694.176 413.574 688.896 413.574 681.408V544.608C413.574 537.12 411.462 531.936 407.238 529.056C403.206 525.984 398.406 524.448 392.838 524.448V521.28H417.03H425.382V681.408ZM545.19 681.408C545.19 688.896 547.206 694.176 551.238 697.248C555.462 700.128 560.358 701.568 565.926 701.568V704.736H541.734H533.382V544.608C533.382 537.12 530.982 531.936 526.182 529.056C521.382 525.984 515.718 524.448 509.19 524.448V521.28H537.414H541.734H565.926V524.448C560.358 524.448 555.462 525.984 551.238 529.056C547.206 531.936 545.19 537.12 545.19 544.608V681.408ZM521.574 704.736L417.318 521.28H436.038L540.294 704.736H521.574Z" fill="#DAD9D6"/>
@@ -208,6 +217,7 @@ const ManyOne = () => {
             <div
               ref={imageRef}
               className="w-[200px] h-[250px] md:w-[405px] md:h-[505px] relative md:mb-12 md:mb-0 z-10"
+              aria-hidden="true"
             >
               <div className="relative h-full w-full overflow-hidden">
                 {/* Animated frame sequence */}
@@ -217,15 +227,16 @@ const ManyOne = () => {
                 >
                   <Image
                     src={getFrameSrc(currentFrame)}
-                    alt="Face sequence animation"
+                    alt=""
                     fill
                     className="object-cover"
                     unoptimized={false}
                     priority
+                    aria-hidden="true"
                   />
 
                   {/* Visual effects layer group */}
-                  <div className="absolute inset-0 w-full h-full">
+                  <div className="absolute inset-0 w-full h-full" aria-hidden="true">
                     {/* Ripple effect */}
                     <div
                       ref={rippleEffectRef}
@@ -265,6 +276,7 @@ const ManyOne = () => {
                 <div
                   ref={decorRef}
                   className="absolute inset-0 border-2 border-ethos-gray/20 -translate-x-2 -translate-y-2 pointer-events-none z-0"
+                  aria-hidden="true"
                 />
               </div>
             </div>
@@ -274,12 +286,12 @@ const ManyOne = () => {
 
       {/* Tagline */}
       <div className="flex flex-col justify-center mt-20 md:mt-60 m-auto w-[200px] md:w-full">
-        <p
+        <h2
           ref={textRef}
           className="text-[24px] md:text-[50px] text-white mb-6 opacity-100 text-center owners"
         >
           ONE RESIDENCE. ONE LIFE. ONE ETHOS.
-        </p>
+        </h2>
       </div>
     </section>
   );

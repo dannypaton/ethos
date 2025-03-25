@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
@@ -22,23 +22,68 @@ const Evolution = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    // Make sure elements are visible first
-    if (titleRef.current) {
-      gsap.set(titleRef.current, { opacity: 1 });
-    }
-    if (lineRef.current) {
-      gsap.set(lineRef.current, { opacity: 1 });
-    }
-    if (paragraphRef.current) {
-      gsap.set(paragraphRef.current, { opacity: 1 });
-    }
-    if (buttonRef.current) {
-      gsap.set(buttonRef.current, { opacity: 1 });
-    }
+  // Enhanced button animation with reduced motion check
+  const handleButtonHover = useCallback(() => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && buttonRef.current) {
+      const spanElement = buttonRef.current.querySelector("span");
+      const imgElement = buttonRef.current.querySelector("img");
 
-    // Simplified animations - just basic fade in
-    if (sectionRef.current) {
+      if (spanElement) {
+        gsap.to(spanElement, {
+          x: 5,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+
+      if (imgElement) {
+        gsap.to(imgElement, {
+          x: 3,
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+
+      buttonRef.current.classList.add(styles.isHovered);
+    }
+  }, []);
+
+  const handleButtonLeave = useCallback(() => {
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && buttonRef.current) {
+      const spanElement = buttonRef.current.querySelector("span");
+      const imgElement = buttonRef.current.querySelector("img");
+
+      if (spanElement) {
+        gsap.to(spanElement, {
+          x: 0,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+
+      if (imgElement) {
+        gsap.to(imgElement, {
+          x: 0,
+          opacity: 0.7,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+
+      buttonRef.current.classList.remove(styles.isHovered);
+    }
+  }, []);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Make sure elements are visible first
+    [titleRef, lineRef, paragraphRef, buttonRef].forEach(ref => {
+      if (ref.current) gsap.set(ref.current, { opacity: 1 });
+    });
+
+    if (!prefersReducedMotion && sectionRef.current) {
       // Simple fade in for image
       if (imageRef.current) {
         gsap.fromTo(
@@ -84,11 +129,7 @@ const Evolution = () => {
     }
 
     // Handle body overflow when modal is open
-    if (isModalOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isModalOpen ? "hidden" : "";
 
     return () => {
       // Cleanup
@@ -97,61 +138,8 @@ const Evolution = () => {
     };
   }, [isModalOpen]);
 
-  // Enhanced button animation
-  const handleButtonHover = () => {
-    if (buttonRef.current) {
-      const spanElement = buttonRef.current.querySelector("span");
-      if (spanElement) {
-        gsap.to(spanElement, {
-          x: 5,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      }
-
-      const imgElement = buttonRef.current.querySelector("img");
-      if (imgElement) {
-        gsap.to(imgElement, {
-          x: 3,
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      }
-
-      // Add hover class to button
-      buttonRef.current.classList.add(styles.isHovered);
-    }
-  };
-
-  const handleButtonLeave = () => {
-    if (buttonRef.current) {
-      const spanElement = buttonRef.current.querySelector("span");
-      if (spanElement) {
-        gsap.to(spanElement, {
-          x: 0,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      }
-
-      const imgElement = buttonRef.current.querySelector("img");
-      if (imgElement) {
-        gsap.to(imgElement, {
-          x: 0,
-          opacity: 0.7,
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      }
-
-      // Remove hover class from button
-      buttonRef.current.classList.remove(styles.isHovered);
-    }
-  };
-
   // Modal open/close functions
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsModalOpen(true);
 
     if (modalRef.current) {
@@ -172,11 +160,11 @@ const Evolution = () => {
     document.dispatchEvent(
       new CustomEvent("modalStateChange", { detail: { isOpen: true } })
     );
-  };
+  }, []);
 
-  const closeModal = (e: React.MouseEvent) => {
+  const closeModal = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent event propagation
+    e.stopPropagation();
 
     if (modalRef.current) {
       gsap.to(modalRef.current, {
@@ -185,17 +173,11 @@ const Evolution = () => {
         ease: "power2.in",
         onComplete: () => {
           setIsModalOpen(false);
-          // Restore scrolling when modal is fully closed
           document.body.style.overflow = "";
-
-          // Update all ScrollTriggers to ensure they resume correctly
           ScrollTrigger.update();
 
-          // Refresh if needed to make sure face_frames animation works
           setTimeout(() => {
             ScrollTrigger.refresh();
-
-            // Dispatch custom event for other components to respond
             document.dispatchEvent(
               new CustomEvent("modalStateChange", { detail: { isOpen: false } })
             );
@@ -203,12 +185,25 @@ const Evolution = () => {
         },
       });
     }
-  };
+  }, []);
+
+  // Handle keyboard events for modal
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isModalOpen) {
+      closeModal(e as unknown as React.MouseEvent);
+    }
+  }, [isModalOpen, closeModal]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <section
       ref={sectionRef}
       className="py-0 bg-ethos-dark relative max-w-[1240px] mx-auto mb-48"
+      aria-label="Evolution Section"
     >
       <div className="container-custom mx-0 px-0 max-w-none flex flex-col lg:flex-row">
         {/* Left side - Image */}
@@ -219,7 +214,7 @@ const Evolution = () => {
           >
             <Image
               src="/images/home-1.webp"
-              alt="Metrotown City View"
+              alt="Aerial view of Metrotown's urban landscape"
               fill
               priority
               className="transform transition-transform duration-700 !relative px-[10%] lg:px-0 object-cover object-position-center"
@@ -244,7 +239,11 @@ const Evolution = () => {
               <span className="relative">EVOLUTION</span>
             </h2>
 
-            <div ref={lineRef} className="w-16 h-0.5 bg-white mb-24"></div>
+            <div 
+              ref={lineRef} 
+              className="w-16 h-0.5 bg-white mb-24"
+              aria-hidden="true"
+            ></div>
 
             <p
               ref={paragraphRef}
@@ -262,6 +261,9 @@ const Evolution = () => {
                 onMouseEnter={handleButtonHover}
                 onMouseLeave={handleButtonLeave}
                 onClick={openModal}
+                aria-label="Learn more about Anthem's Metrotown Evolution"
+                aria-expanded={isModalOpen}
+                aria-controls="evolution-modal"
               >
                 <span className="relative inline-flex items-center">
                   ANTHEM
@@ -271,6 +273,7 @@ const Evolution = () => {
                     width={20}
                     height={10}
                     className="ml-3 opacity-70 transition-all duration-300"
+                    aria-hidden="true"
                   />
                 </span>
               </button>
@@ -282,32 +285,35 @@ const Evolution = () => {
       {isModalOpen && (
         <div
           ref={modalRef}
+          id="evolution-modal"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-6"
-          onClick={(e) => closeModal(e)}
-          // Add a specific data attribute to help identify this modal
-          data-modal="evolution-modal"
+          onClick={closeModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
         >
           <div
             className="relative w-full max-w-5xl"
-            onClick={(e) => e.stopPropagation()} // Prevent clicks inside content from closing
+            onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute -top-10 right-0 text-white hover:text-ethos-gray transition-colors"
-              onClick={(e) => closeModal(e)}
+              className="absolute -top-10 right-0 text-white hover:text-ethos-gray transition-colors p-2"
+              onClick={closeModal}
               aria-label="Close modal"
             >
               <Image
                 src="/images/icon-close.svg"
-                alt="Close"
+                alt=""
                 width={24}
                 height={24}
+                aria-hidden="true"
               />
             </button>
 
             <div className="relative aspect-video overflow-hidden">
               <Image
                 src="/images/home-1.webp"
-                alt="Metrotown City View - Full Size"
+                alt="Detailed aerial view of Metrotown's urban development"
                 fill
                 style={{ objectFit: "cover" }}
                 className="w-full"
@@ -315,7 +321,10 @@ const Evolution = () => {
               />
 
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-b from-transparent to-black/90">
-                <h3 className="text-lg md:text-xl font-cirka mb-2">
+                <h3 
+                  id="modal-title"
+                  className="text-lg md:text-xl font-cirka mb-2"
+                >
                   ANTHEM&apos;S METROTOWN EVOLUTION
                 </h3>
                 <p className="text-sm font-owners-light text-white/70">

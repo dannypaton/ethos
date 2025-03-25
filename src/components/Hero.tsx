@@ -116,10 +116,7 @@ const Hero: React.FC<HeroProps> = ({
   }, []);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-visible"
-    >
+    <header role="banner" ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-visible">
       {/* Background video with optimization */}
       <VideoBackground
         src={videoSrc}
@@ -138,6 +135,7 @@ const Hero: React.FC<HeroProps> = ({
           clipPath: "polygon(0px 0px, 100% 23%, 100% 100%, 0% 100%)",
           overflow: "hidden",
         }}
+        aria-hidden="true"
       >
         <video
           autoPlay
@@ -152,7 +150,7 @@ const Hero: React.FC<HeroProps> = ({
 
       {/* Hero content */}
       <Container className="relative z-10 text-center">
-        <div className="flex flex-col items-center mt-[200px]">
+        <main className="flex flex-col items-center mt-[200px]">
           {/* Logo with fade-in animation */}
           <div ref={logoRef} className="mb-8">
             <Image
@@ -165,8 +163,10 @@ const Hero: React.FC<HeroProps> = ({
             />
           </div>
 
-          {/* Hidden h1 for SEO while maintaining design */}
-          <h1 className="sr-only">Ethos Metrotown - Luxury Residences</h1>
+          {/* Primary heading for SEO and accessibility */}
+          <h1 className="text-4xl font-bold text-white mb-8">
+            Ethos Metrotown - Luxury Residences
+          </h1>
 
           {/* Video button */}
           <div
@@ -176,7 +176,7 @@ const Hero: React.FC<HeroProps> = ({
             <Button
               onClick={() => setVideoModalOpen(true)}
               variant="icon"
-              ariaLabel="Watch video"
+              ariaLabel="Watch video about Ethos Metrotown"
             >
               <Image
                 src="/images/icon-play.png"
@@ -191,7 +191,7 @@ const Hero: React.FC<HeroProps> = ({
               WATCH VIDEO
             </p>
           </div>
-        </div>
+        </main>
       </Container>
 
       {/* Video Modal */}
@@ -200,7 +200,7 @@ const Hero: React.FC<HeroProps> = ({
         isOpen={videoModalOpen}
         onClose={() => setVideoModalOpen(false)}
       />
-    </section>
+    </header>
   );
 };
 
